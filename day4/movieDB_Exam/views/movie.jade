@@ -7,13 +7,23 @@ block content
   p 줄거리 : #{movie.synopsis}
   h1 한줄평
   ul
-    each comment in movie.comments
-      li #{comment}
+  
+  each comment in movie.comments
+    form(method="POST" action="/movies/comment_delete")
+      input(type="hidden" name="_method" value="delete")
+      li #{comment.comment}
+      input(type="hidden" name="_id" value=comment.comment_id)
+      input(type="hidden" name="movie_id" value=movie.movie_id)
+      input(type="submit" value="댓글 삭제")
   form(method="POST" action="/movies/comment")
-    input(type="hidden" name="movie_id" value=movie.movie_id)
     table
       tr
         td
           input(type="text" name="comment")
         td
           input(type="submit" value="올리기")
+  a(href="/movies/"+movie.movie_id+"/update") 수정
+  form(method="POST" action="/movies/delete")
+    input(type="hidden" name="_method" value="delete")
+    input(type="hidden" name="movie_id" value=movie.movie_id)
+    input(type="submit" value="삭제")
