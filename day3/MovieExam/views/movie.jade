@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title
+  form(method="POST" action="/movies/"+title)
+    input(type="hidden" name="_method" value="put")
+    ul
+      li
+        Movie title: #{title}
+      li
+        input(type="text" name="director" value=director)
+      li
+        input(type="text" name="actor" value=actor)
+    input(type="submit" value="업데이트")
+  form(method="POST" action="/movies/"+title)
+    input(type="hidden" name="_method" value="delete")
+    input(type="submit" value="삭제")
+      

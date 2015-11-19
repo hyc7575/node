@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1= title
+  form(action="/movies/add" method="POST")
+    table
+      tr
+        td 영화제목
+        td
+          input(type="text" name="title" placeholder="영화제목")
+      tr
+        td 감독
+        td
+          input(type="text" name="director" placeholder="감독")
+      tr
+        td 출시연도
+        td
+          input(type="text" name="year" placeholder="출시연도")
+      tr
+        td 영화 줄거리
+        td
+          textarea(style="width:100%;height: 100px; margin:0; padding:0;" name="synopsis")
+    input(type="submit" value="추가하기")
+    
