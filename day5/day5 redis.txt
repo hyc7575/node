@@ -1,0 +1,19 @@
+redis 라는 db를 이용하여 모바일에서 chat기능을 만들수 있다.
+websocket과 함께 사용하여 웹브라우저는 물론 안드로이드 아이폰을 지원하는 서비스를 만들 수 있다.
+
+
+redis를 다운받아서 커맨드창에서 64bit 혹은 32bit에 들어가서 redis-server를 돌린다.
+
+다른 cmd창을 연다. redis-cli를 이용하여 클라이언트에 접속.(ping 을 쳤을 때 PONG이 나오면 정상)
+set foo bar 를 입력하면 foo(키)라는곳에 "bar"(value)을 저장한다(데이터저장)
+get foo를 이용하여 "bar"를 불러온다.
+
+chat기능
+
+subscribe chat -- chat이라는 방을 만드는듯(?)
+다른 cmd창을 띄워서 redis-cli에 접속.
+publish chat hello  --> chat이라는 방에 hello를 보내는듯함.
+
+
+
+http://nashorn.tistory.com/entry/TNODE  //강사님이 하신 소스 자료 올리는곳
