@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>채팅 클라이언트</title>
+</head>
+<body>
+	<div id="contents">
+		<h1>채팅방</h1>
+		<div class="chat_content">
+			<div class="chat_login"><!-- 로그인 영역 -->
+				<input type="text" id="chat_id" placeholder="ID 입력"/>
+				<a href="javascript:connection();">접속하기</a>
+				<strong>현재접속자수</strong> : <span id="now_user_cnt">-</span>				
+			</div>
+			<div id="chat_form_no">ID 입력 후 접속해 주세요.</div>
+			<div id="chat_form" style="display: none;">
+				<!-- 채팅창 영역 -->
+				<ul id="chat_list">
+					
+				</ul>
+				<ul id="chat_user_list">
+					
+				</ul>
+				<div class="chat_input">
+					<input type="text" id="chat_input" placeholder="대화글 입력"/>
+					<a href="javascript:chat_input();" style="margin-right: 20px;">전송</a>
+					<a href="javascript:chat_out();">나가기</a>
+				</div>
+				<div class="chat_history"><!-- 접속로그영역 -->
+					<ul id="chat_logs">
+					
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			socket = io.connect();
+			socket.on('chat_join',function(data) {
+				data = JSON.parse(data);
+				console.log(data);
+				$('#chat_user_list').empty();
+				for(var i = 0; i<data.length; i++) {
+					var user_id = data[i];
+					if(user_id == chat_id) {
+						$('#chat_user_list').append('<li><string>'+ user_id +'(me)</string></li>');
+						$('#chat_id').attr('disabled',true);
+					} else {
+						$('#chat_user_list').append('<li>'+ user_id +'</li>');
+					}
+				}
+				$('#now_user_cnt').html(data.length);
+			});
+			socket.on('chat_fail',function(data) {
+				data = JSON.parse(data); //서버에서 받아온 msg.chat_id라는 제이슨 객체를  객체형태로 바꾼다.
+				alert(data+'님은 이미 접속된 ID입니다.');
+			});
+			socket.on('someone_leaved',function(data) {
+				data = JSON.parse(data);
+				$('#chat_user_list').empty();
+				for(var i = 0; i<data.length; i++) {
+					var user_id = data[i];
+					if(user_id == chat_id) {
+						$('#chat_user_list').append('<li><string>'+ user_id +'(me)</string></li>');
+					} else {
+						$('#chat_user_list').append('<li>'+user_id+'</li>');
+					}
+				}
+				$('#now_user_cnt').html(data.length);
+			});
+		});
+		var chat_id = '';
+		var socket = null;
+		
+		function chat_input() {
+			
+		}
+		function chat_out() {
+			socket.emit('leave',JSON.stringify({chat_id:chat_id})); // leave이벤트를 chat_id값과 함께 서버로 전송.
+			$('#chat_id').attr('disabled',false);
+			$('#chat_id').val('');
+			$('#chat_list').html('');
+			$('#chat_form').slideUp();
+			$('#chat_form_no').slideDown();
+			chat_id = '';
+		}
+		function chat_in() {
+			console.log(chat_id + 'in 함수')
+			socket.emit('chat_conn',JSON.stringify({chat_id:chat_id}));
+			$('#chat_list').html('');
+		}
+		function connection() {
+			chat_id = $('#chat_id').val();
+			console.log(chat_id);
+			if(chat_id === '') {
+				alert('ID를 입력해주세요.');
+			} else {
+				chat_in();
+				$('#chat_form_no').slideUp();
+				$('#chat_form').slideDown();
+			}
+		}
+	</script>
+</body>
+</html>
