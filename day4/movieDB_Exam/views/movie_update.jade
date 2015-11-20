@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1= title
+  form(method="POST" action="/movies/update")
+    input(type="hidden" name="movie_id" value=movie.movie_id)
+    table
+      tr
+        td 영화 제목
+        td
+          input(type="text" name="title" value=movie.title)
+      tr
+        td 감독
+        td
+          input(type="text" name="director" value=movie.director)
+      tr
+        td 연도
+        td
+          input(type="text" name="year" value=movie.year)
+      tr
+        td 줄거리
+        td
+          textarea(style="width:100%;height: 50px;" name="synopsis") #{movie.synopsis}
+    input(type="submit" value="수정하기")
